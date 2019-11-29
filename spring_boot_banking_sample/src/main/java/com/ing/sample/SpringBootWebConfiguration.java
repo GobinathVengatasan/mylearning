@@ -24,17 +24,16 @@ public class SpringBootWebConfiguration {
 	
 	private UserAccounts getMockUserAccounts() {
 		UserAccounts userAccounts = new UserAccounts();
-		userAccounts.getAllAccounts().add(getMockAccount(AccountTypeEnum.SAVING));
-		userAccounts.getAllAccounts().add(getMockAccount(AccountTypeEnum.SAVING));
-		userAccounts.getAllAccounts().add(getMockAccount(AccountTypeEnum.SAVING));
-		userAccounts.getAllAccounts().add(getMockAccount(AccountTypeEnum.CREDIT_CARD));
-		userAccounts.getAllAccounts().add(getMockAccount(AccountTypeEnum.CREDIT_CARD));
-		userAccounts.getAllAccounts().add(getMockAccount(AccountTypeEnum.LOAN));
-		userAccounts.getAllAccounts().add(getMockAccount(AccountTypeEnum.LOAN));
+		userAccounts.getAllAccounts().add(getMockAccount(AccountTypeEnum.SAVING,15.4f));
+		userAccounts.getAllAccounts().add(getMockAccount(AccountTypeEnum.SAVING,14.4f));
+		userAccounts.getAllAccounts().add(getMockAccount(AccountTypeEnum.SAVING,13.4f));
+		userAccounts.getAllAccounts().add(getMockAccount(AccountTypeEnum.CURRENT,1.4f));
+		userAccounts.getAllAccounts().add(getMockAccount(AccountTypeEnum.CURRENT,16.4f));
+		userAccounts.getAllAccounts().add(getMockAccount(AccountTypeEnum.CURRENT,12.4f));		
 		return userAccounts;
 	}
 	
-	private Account getMockAccount(AccountTypeEnum acctType) {
+	private Account getMockAccount(AccountTypeEnum acctType,float balance) {
 		Integer id = new Random().nextInt();
 		id = id < 0 ? id * -1 : id;
 		
@@ -42,7 +41,7 @@ public class SpringBootWebConfiguration {
 		account.setAccountNumber("ING_" + id + "_" + acctType.name());
 		account.setAccountStatus(AccountStatusEnum.ACTIVE);
 		account.setAccountType(acctType);
-		account.setBalance(15.4f);
+		account.setBalance(balance);
 		account.setBankName("International Nertherland Group");
 		account.setHolderName("Gobinath Vengatasan");
 		account.setId(id);

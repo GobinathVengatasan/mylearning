@@ -1,5 +1,9 @@
 package com.ing.sample.controller;
 
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,10 +18,9 @@ import com.ing.sample.model.UserAccounts;
 public class AccountServiceController {
 
 	@GetMapping("/account")
-	public UserAccounts getAllAccounts() {
-		
+	public List<Account> getAllAccounts() {		
 		UserAccounts userAccounts = (UserAccounts) ApplicationContextProvider.getContext().getBean(UserAccounts.class);
-		return userAccounts;
+		return userAccounts.getAllAccounts().stream().sorted(Comparator.comparing(Account::getBalance)).collect(Collectors.toList());
 	}
 	
 	@GetMapping("/account/{accountId}")
