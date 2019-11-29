@@ -1,50 +1,35 @@
 package com.ing.sample;
 
-import java.util.Random;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
-import com.ing.sample.model.Account;
-import com.ing.sample.model.AccountStatusEnum;
-import com.ing.sample.model.AccountTypeEnum;
+import com.ing.sample.iterceptor.AccountServiceInterceptor;
 import com.ing.sample.model.UserAccounts;
 
 @Configuration
-public class SpringBootWebConfiguration {
+public class SpringBootWebConfiguration extends WebMvcConfigurerAdapter {
 	
 	@Autowired
 	UserAccounts userAccounts;
+	
+	@Autowired
+	AccountServiceInterceptor accountServiceInterceptor;
 
 	@Bean	
 	public UserAccounts getUserAccounts() {		
-		return getMockUserAccounts();
+		return new UserAccounts();
 	}
 	
-	private UserAccounts getMockUserAccounts() {
-		UserAccounts userAccounts = new UserAccounts();
-		userAccounts.getAllAccounts().add(getMockAccount(AccountTypeEnum.SAVING,15.4f));
-		userAccounts.getAllAccounts().add(getMockAccount(AccountTypeEnum.SAVING,14.4f));
-		userAccounts.getAllAccounts().add(getMockAccount(AccountTypeEnum.SAVING,13.4f));
-		userAccounts.getAllAccounts().add(getMockAccount(AccountTypeEnum.CURRENT,1.4f));
-		userAccounts.getAllAccounts().add(getMockAccount(AccountTypeEnum.CURRENT,16.4f));
-		userAccounts.getAllAccounts().add(getMockAccount(AccountTypeEnum.CURRENT,12.4f));		
-		return userAccounts;
+	@Bean	
+	public AccountServiceInterceptor getAccountServiceInterceptor() {		
+		return new AccountServiceInterceptor();
 	}
 	
-	private Account getMockAccount(AccountTypeEnum acctType,float balance) {
-		Integer id = new Random().nextInt();
-		id = id < 0 ? id * -1 : id;
-		
-		Account account = new Account();
-		account.setAccountNumber("ING_" + id + "_" + acctType.name());
-		account.setAccountStatus(AccountStatusEnum.ACTIVE);
-		account.setAccountType(acctType);
-		account.setBalance(balance);
-		account.setBankName("International Nertherland Group");
-		account.setHolderName("Gobinath Vengatasan");
-		account.setId(id);
-		return account;		
+	@Override
+	public void addInterceptors(InterceptorRegistry registry) {		
+		registry.addInterceptor(accountServiceInterceptor).addPathPatterns("/bank/*");
 	}
 }
